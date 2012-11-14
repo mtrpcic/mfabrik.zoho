@@ -133,7 +133,11 @@ class CRM(Connection):
         }
         post_params.update(parameters)
 
-        response = self.do_call("https://crm.zoho.com/crm/private/json/%s/getRecords" % table, post_params)
+        url = "https://crm.zoho.com/crm/private/json/%s/getRecords" % resource
+        print "Resource URI: %s" % url
+        print post_params
+
+        response = self.do_call(url, post_params)
         
         # raw data looks like {'response': {'result': {'Leads': {'row': [{'FL': [{'content': '177376000000142085', 'val': 'LEADID'}, ...
         data =  decode_json(response)
@@ -174,6 +178,7 @@ class CRM(Connection):
         
         post_params.update(parameters)
 
+        print post_params
         response = self.do_call("https://crm.zoho.com/crm/private/json/Leads/getRecords", post_params)
         
         # raw data looks like {'response': {'result': {'Leads': {'row': [{'FL': [{'content': '177376000000142085', 'val': 'LEADID'}, ...
