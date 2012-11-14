@@ -121,6 +121,34 @@ class CRM(Connection):
         return records
         
     
+    def mtr_get_records(self, table="leads", columns=[], parameters={}):
+        self.ensure_opened()
+        columns = ",".join(columns)
+        resource = table.capitalize()
+        select_columns = "%s(%s)" % (resource, columns)
+
+        post_params = {
+            "selectColumns": select_columns
+            "newFormat": 2
+        }
+        post_params.update(parameters)
+
+        response = self.do_call("https://crm.zoho.com/crm/private/json/%s/getRecords" % table, post_params)
+        
+        # raw data looks like {'response': {'result': {'Leads': {'row': [{'FL': [{'content': '177376000000142085', 'val': 'LEADID'}, ...
+        data =  decode_json(response)
+        
+        # Sanify output data to more Python-like format
+        output = []
+        for row in data["response"]["result"][resource]["row"]:
+            item = {}
+            for cell in row["FL"]:
+                item[cell["val"]] = cell["content"]
+            
+            output.append(item)
+            
+        return output
+
     def get_records(self, selectColumns='leads(First Name,Last Name,Company)', parameters={}):
         """ 
         
