@@ -124,11 +124,11 @@ class CRM(Connection):
     def mtr_get_records(self, table="leads", columns=[], parameters={}):
         self.ensure_opened()
 
-        if columns == "All":
-            select_columns = "All"
-        else:
+        if isinstance(columns, dict):
             columns = ",".join(columns)
             select_columns = "%s(%s)" % (resource, columns)
+        else:
+            select_columns = "All"
 
         resource = table.capitalize()
 
@@ -146,6 +146,7 @@ class CRM(Connection):
         
         # Sanify output data to more Python-like format
         output = []
+        print data
         for row in data["response"]["result"][resource]["row"]:
             item = {}
             for cell in row["FL"]:
@@ -180,7 +181,6 @@ class CRM(Connection):
         
         post_params.update(parameters)
 
-        print post_params
         response = self.do_call("https://crm.zoho.com/crm/private/json/Leads/getRecords", post_params)
         
         # raw data looks like {'response': {'result': {'Leads': {'row': [{'FL': [{'content': '177376000000142085', 'val': 'LEADID'}, ...
