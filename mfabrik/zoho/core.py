@@ -29,7 +29,7 @@ try:
     import json
 except ImportError:
     try:
-        import simplejson
+        import simplejson as json
     except ImportError:
         # Python 2.4, no simplejson installed
         raise RuntimeError("You need json or simplejson library with your Python")
@@ -222,7 +222,7 @@ def decode_json(json_data):
     """
     
     # {"response": {"uri":"/crm/private/json/Leads/getRecords","error": {"code":4500,"message":"Problem occured while processing the request"}}}
-    data = simplejson.loads(json_data)
+    data = json.loads(json_data)
     
     response = data.get("response", None)
     if response:
