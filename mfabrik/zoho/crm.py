@@ -128,7 +128,7 @@ class CRM(Connection):
         select_columns = "%s(%s)" % (resource, columns)
 
         post_params = {
-            "selectColumns": select_columns
+            "selectColumns": select_columns,
             "newFormat": 2
         }
         post_params.update(parameters)
