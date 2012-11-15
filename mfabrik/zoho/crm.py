@@ -112,8 +112,17 @@ class CRM(Connection):
             "parentModule": "All"
         }
         url = "https://crm.zoho.com/crm/private/json/Notes/getRelatedRecords"
-        response = self.do_call(url, post_params)
-        return response
+        data = self.do_call(url, post_params)
+
+        output = []
+        for row in data["response"]["result"]["Notes"]["row"]:
+            item = {}
+            for cell in row["FL"]:
+                item[cell["val"]] = cell["content"]
+            
+            output.append(item)
+            
+        return output
 
     # Fixed
     def update_records(self, table, id, data=[], additional_post_params={}):
@@ -142,10 +151,6 @@ class CRM(Connection):
         post_params.update(additional_post_params)
 
         url = "https://crm.zoho.com/crm/private/xml/%s/updateRecords" % resource
-
-        print "URI: %s" % url
-        print "Root..."
-        print root
 
         response = self.do_xml_call(url, post_params, root)
         return self.check_successful_xml(response)
@@ -251,7 +256,7 @@ class CRM(Connection):
             
             output.append(item)
             
-        return output        
+        return output  
                 
     def delete_record(self, id, parameters={}):
         """ Delete one record from Zoho CRM.
