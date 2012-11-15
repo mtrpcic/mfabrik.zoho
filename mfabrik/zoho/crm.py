@@ -53,7 +53,7 @@ class CRM(Connection):
         
         return True
 
-    def update_records(self, table, data=[], additional_post_params={}):
+    def update_records(self, table, id, data=[], additional_post_params={}):
         self.ensure_opened()
         resource = table.capitalize()
         root = Element(resource)
@@ -72,7 +72,8 @@ class CRM(Connection):
             row_count += 1
 
         post_params = {
-            "newFormat": 1
+            "newFormat": 1,
+            "id": id
         }
 
         post_params.update(additional_post_params)
