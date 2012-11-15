@@ -64,7 +64,7 @@ class CRM(Connection):
             row = Element("row", no=str(row_count))
             root.append(row)
 
-            for key, value in lead.items():
+            for key, value in record.items():
                 fl = Element("fl", val=key)
                 fl.text = value
                 row.append(fl)
