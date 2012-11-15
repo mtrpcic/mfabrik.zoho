@@ -115,6 +115,8 @@ class CRM(Connection):
         data = self.do_call(url, post_params)
 
         output = []
+        print "Data...."
+        print data
         for row in data["response"]["result"]["Notes"]["row"]:
             item = {}
             for cell in row["FL"]:
