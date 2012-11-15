@@ -112,7 +112,7 @@ class CRM(Connection):
             "parentModule": "All"
         }
         url = "https://crm.zoho.com/crm/private/json/Notes/getRelatedRecords"
-        response = self.do_xml_call(url, post_params, root)
+        response = self.do_call(url, post_params)
         return response
 
     # Fixed
