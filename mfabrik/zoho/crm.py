@@ -25,10 +25,12 @@ from core import Connection, ZohoException, decode_json
 class CRM(Connection):
     """ CRM specific Zoho APIs mapped to Python """
     
+    # Fixed
     def get_service_name(self):
         """ Called by base class """
         return "ZohoCRM"
     
+    # Fixed
     def check_successful_xml(self, response):
         """ Make sure that we get "succefully" response.
         
@@ -53,6 +55,7 @@ class CRM(Connection):
         
         return True
 
+    # Fixed
     def add_note(self, entity_id, title, body):
         attributes = {
             "entityId": entity_id,
@@ -76,6 +79,41 @@ class CRM(Connection):
         url = "https://crm.zoho.com/crm/private/xml/Notes/insertRecords"
         response = self.do_xml_call(url, post_params, root)
         return self.check_successful_xml(response)
+
+    def update_note(self, note_id, title, body):
+        attribues = {
+            "Note Title": title,
+            "Note Content": body
+        }
+
+        post_params = {
+            "newFormat": 1,
+            id: note_id
+        }
+
+        root = Element("Notes")
+        row = Element("row", no="1")
+        root.append(row)
+
+        for key, value in attributes.items():
+            fl = Element("fl", val=key)
+            fl.text = value
+            row.append(fl)
+
+        url = "https://crm.zoho.com/crm/private/xml/Notes/updateRecords"
+        response = self.do_xml_call(url, post_params, root)
+        return self.check_successful_xml(response)
+
+
+    def get_notes_for_entity(self, entity_id):
+        post_params = {
+            "newFormat": 1,
+            "id": entity_id,
+            "parentModule": "All"
+        }
+        url = "https://crm.zoho.com/crm/private/json/Notes/getRelatedRecords"
+        response = self.do_xml_call(url, post_params, root)
+        return response
 
     # Fixed
     def update_records(self, table, id, data=[], additional_post_params={}):
