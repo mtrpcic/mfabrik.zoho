@@ -53,6 +53,31 @@ class CRM(Connection):
         
         return True
 
+    def add_note(self, entity_id, title, body):
+        attributes = {
+            "entityId": entity_id,
+            "Note Title": title,
+            "Note Content": body
+        }
+
+        root = Element("Notes")
+        row = Element("row", no="1")
+        root.append(row)
+
+        for key, value in attributes.items():
+            fl = Element("fl", val=key)
+            fl.text = value
+            row.append(fl)
+
+        post_params = {
+            "newFormat": 1
+        }
+
+        url = "https://crm.zoho.com/crm/private/xml/Notes/insertRecords"
+        response = self.do_xml_call(url, post_params, root)
+        return self.check_successful_xml(response)
+
+    # Fixed
     def update_records(self, table, id, data=[], additional_post_params={}):
         self.ensure_opened()
         resource = table.capitalize()
@@ -141,7 +166,7 @@ class CRM(Connection):
                 records.append(record_detail)
         return records
         
-    
+    # Fixed
     def get_records(self, table="leads", columns=[], parameters={}):
         """ 
         
