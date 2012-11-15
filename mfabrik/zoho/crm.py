@@ -52,22 +52,42 @@ class CRM(Connection):
                 raise ZohoException(message.text)
         
         return True
+
+    def update_records(self, table, data=[], additional_post_params={}):
+        self.ensure_opened()
+        resource = table.capitalize()
+        root = Element(resource)
+
+        row_count = 1
+
+        for record in data:
+            row = Element("row", no=str(row_count))
+            root.append(row)
+
+            for key, value in lead.items():
+                fl = Element("fl", val=key)
+                fl.text = value
+                row.append(fl)
+
+            row_count += 1
+
+        post_params = {
+            "newFormat": 1
+        }
+
+        post_params.update(additional_post_params)
+
+        url = "https://crm.zoho.com/crm/private/xml/%s/updateRecords" % resource
+
+        print "URI: %s" % url
+        print "Root..."
+        print root
+
+        response = self.do_xml_call(url, post_params, root)
+        return self.check_successful_xml(response)
+
     
-    def insert_records(self, leads, extra_post_parameters={}):
-        """ Insert new leads to Zoho CRM database.
-        
-        The contents of the lead parameters can be defined in Zoho CRM itself.
-        
-        http://zohocrmapi.wiki.zoho.com/insertRecords-Method.html
-        
-        @param leads: List of dictionaries. Dictionary content is directly mapped to 
-            <FL> XML parameters as described in Zoho CRM API.
-        
-        @param extra_post_parameters: Parameters appended to the HTTP POST call. 
-            Described in Zoho CRM API.
-        
-        @return: List of record ids which were created by insert recoreds
-        """        
+    def insert_records(self, leads, extra_post_parameters={}):        
 
         self.ensure_opened()
         
@@ -121,7 +141,21 @@ class CRM(Connection):
         return records
         
     
-    def mtr_get_records(self, table="leads", columns=[], parameters={}):
+    def get_records(self, table="leads", columns=[], parameters={}):
+        """ 
+        
+        http://zohocrmapi.wiki.zoho.com/getRecords-Method.html
+        
+        @param selectColumns: String. What columns to query. For example query format,
+            see API doc. Default is leads(First Name,Last Name,Company).
+        
+        @param parameters: Dictionary of filtering parameters which are part of HTTP POST to Zoho.
+            For example parameters see Zoho CRM API docs.
+        
+        @return: Python list of dictionarizied leads. Each dictionary contains lead key-value pairs. LEADID column is always included.
+
+        """
+
         self.ensure_opened()
 
         if isinstance(columns, dict):
@@ -146,7 +180,6 @@ class CRM(Connection):
         
         # Sanify output data to more Python-like format
         output = []
-        print data
         for row in data["response"]["result"][resource]["row"]:
             item = {}
             for cell in row["FL"]:
@@ -154,49 +187,7 @@ class CRM(Connection):
             
             output.append(item)
             
-        return output
-
-    def get_records(self, selectColumns='leads(First Name,Last Name,Company)', parameters={}):
-        """ 
-        
-        http://zohocrmapi.wiki.zoho.com/getRecords-Method.html
-        
-        @param selectColumns: String. What columns to query. For example query format,
-            see API doc. Default is leads(First Name,Last Name,Company).
-        
-        @param parameters: Dictionary of filtering parameters which are part of HTTP POST to Zoho.
-            For example parameters see Zoho CRM API docs.
-        
-        @return: Python list of dictionarizied leads. Each dictionary contains lead key-value pairs. LEADID column is always included.
-
-        """
-        
-        self.ensure_opened()
-        
-
-        post_params = {
-            "selectColumns" : selectColumns,
-            "newFormat" : 2
-        }
-        
-        post_params.update(parameters)
-
-        response = self.do_call("https://crm.zoho.com/crm/private/json/Leads/getRecords", post_params)
-        
-        # raw data looks like {'response': {'result': {'Leads': {'row': [{'FL': [{'content': '177376000000142085', 'val': 'LEADID'}, ...
-        data =  decode_json(response)
-        
-        # Sanify output data to more Python-like format
-        output = []
-        for row in data["response"]["result"]["Leads"]["row"]:
-            item = {}
-            for cell in row["FL"]:
-                item[cell["val"]] = cell["content"]
-            
-            output.append(item)
-            
-        return output
-        
+        return output        
                 
     def delete_record(self, id, parameters={}):
         """ Delete one record from Zoho CRM.
