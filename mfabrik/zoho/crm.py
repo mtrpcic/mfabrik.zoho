@@ -81,7 +81,7 @@ class CRM(Connection):
         return self.check_successful_xml(response)
 
     def update_note(self, note_id, title, body):
-        attribues = {
+        attributes = {
             "Note Title": title,
             "Note Content": body
         }
@@ -104,7 +104,7 @@ class CRM(Connection):
         response = self.do_xml_call(url, post_params, root)
         return self.check_successful_xml(response)
 
-
+    # Fixed
     def get_notes_for_entity(self, entity_id):
         post_params = {
             "newFormat": 1,
@@ -115,8 +115,6 @@ class CRM(Connection):
         response = self.do_call(url, post_params)
         data = decode_json(response)
         output = []
-        print "Data...."
-        print data
         for row in data["response"]["result"]["Notes"]["row"]:
             item = {}
             for cell in row["FL"]:
