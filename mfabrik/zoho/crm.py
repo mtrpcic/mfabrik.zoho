@@ -88,7 +88,7 @@ class CRM(Connection):
 
         post_params = {
             "newFormat": 1,
-            id: note_id
+            "id": note_id
         }
 
         root = Element("Notes")
