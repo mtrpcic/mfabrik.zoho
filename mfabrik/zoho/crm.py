@@ -78,9 +78,9 @@ class CRM(Connection):
 
         url = "https://crm.zoho.com/crm/private/xml/Notes/insertRecords"
         response = self.do_xml_call(url, post_params, root)
-        print "Response..."
-        print response
-        return self.check_successful_xml(response)
+        
+        return get_inserted_records(response)
+        #return self.check_successful_xml(response)
 
     # Fixed
     def update_note(self, note_id, title, body):
