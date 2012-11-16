@@ -252,6 +252,8 @@ class CRM(Connection):
         
         # Sanify output data to more Python-like format
         output = []
+        print "Mike Test\n\n\n"
+        print data
         for row in data["response"]["result"][resource]["row"]:
             item = {}
             for cell in row["FL"]:
