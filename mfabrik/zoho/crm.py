@@ -221,17 +221,17 @@ class CRM(Connection):
         url = "https://crm.zoho.com/crm/private/json/Potentials/getRelatedRecords"
         response = self.do_call(url, post_params)
         data = decode_json(response)
-
+        return data
         #Sanify output data to more Python-like format
-        output = []
-        for row in data["response"]["result"]["Potentials"]["row"]:
-            item = {}
-            for cell in row["FL"]:
-                item[cell["val"]] = cell["content"]
+        # output = []
+        # for row in data["response"]["result"]["Potentials"]["row"]:
+        #     item = {}
+        #     for cell in row["FL"]:
+        #         item[cell["val"]] = cell["content"]
             
-            output.append(item)
+        #     output.append(item)
             
-        return output
+        # return output
 
     # Fixed
     def get_records(self, table="leads", columns=[], parameters={}):
