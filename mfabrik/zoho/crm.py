@@ -212,7 +212,7 @@ class CRM(Connection):
         return records
 
     def get_potentials_for_contact(self, contact_id):
-        parameters = {
+        post_params = {
             "id": contact_id,
             "newFormat": 1,
             "parentModule": "Contacts"
