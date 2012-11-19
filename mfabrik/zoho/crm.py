@@ -227,7 +227,7 @@ class CRM(Connection):
         for record in data["response"]["result"]["Potentials"]["row"]["FL"]:
             output[record["val"]] = record["content"]
         
-         return output
+        return output
 
     # Fixed
     def get_records(self, table="leads", columns=[], parameters={}):
