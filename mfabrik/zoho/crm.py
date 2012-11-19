@@ -211,7 +211,7 @@ class CRM(Connection):
                 records.append(record_detail)
         return records
 
-    def get_potential_for_contact(self, contact_id):
+    def get_potentials_for_contact(self, contact_id):
         parameters = {
             "id": contact_id,
             "newFormat": 1,
