@@ -49,7 +49,6 @@ class CRM(Connection):
         # Check error response
         # <response uri="/crm/private/xml/Leads/insertRecords"><error><code>4401</code><message>Unable to populate data, please check if mandatory value is entered correctly.</message></error></response>
         for error in root.findall("error"):
-            print "Got error"
             for message in error.findall("message"):
                 raise ZohoException(message.text)
         
@@ -211,7 +210,29 @@ class CRM(Connection):
                     record_detail[fl.get("val")] = fl.text
                 records.append(record_detail)
         return records
-        
+
+    def get_potential_for_contact(self, contact_id):
+        parameters = {
+            "id": contact_id,
+            "newFormat": 1,
+            "parentModule": "Contacts"
+        }
+
+        url = "https://crm.zoho.com/crm/private/json/Potentials/getRelatedRecords"
+        response = self.do_call(url, post_params)
+        data = decode_json(response)
+
+        # Sanify output data to more Python-like format
+        output = []
+        for row in data["response"]["result"]["Potentials"]["row"]:
+            item = {}
+            for cell in row["FL"]:
+                item[cell["val"]] = cell["content"]
+            
+            output.append(item)
+            
+        return output
+
     # Fixed
     def get_records(self, table="leads", columns=[], parameters={}):
         """ 
@@ -252,8 +273,6 @@ class CRM(Connection):
         
         # Sanify output data to more Python-like format
         output = []
-        print "Mike Test\n\n\n"
-        print data
         for row in data["response"]["result"][resource]["row"]:
             item = {}
             for cell in row["FL"]:
@@ -261,7 +280,7 @@ class CRM(Connection):
             
             output.append(item)
             
-        return output  
+        return output
                 
     def delete_record(self, id, parameters={}):
         """ Delete one record from Zoho CRM.
