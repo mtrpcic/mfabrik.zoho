@@ -211,7 +211,7 @@ class CRM(Connection):
                 records.append(record_detail)
         return records
 
-    def get_potentials_for_contact(self, contact_id):
+    def get_potential_for_contact(self, contact_id):
         post_params = {
             "id": contact_id,
             "newFormat": 1,
@@ -220,19 +220,14 @@ class CRM(Connection):
 
         url = "https://crm.zoho.com/crm/private/json/Potentials/getRelatedRecords"
         response = self.do_call(url, post_params)
-        return response
-        #data = decode_json(response)
-        #return data
-        #Sanify output data to more Python-like format
-        # output = []
-        # for row in data["response"]["result"]["Potentials"]["row"]:
-        #     item = {}
-        #     for cell in row["FL"]:
-        #         item[cell["val"]] = cell["content"]
-            
-        #     output.append(item)
-            
-        # return output
+
+        data = decode_json(response)
+        
+        output = {}
+        for record in data["response"]["result"]["Potentials"]["row"]["FL"]:
+            output[record["val"]] = record["content"]
+        
+         return output
 
     # Fixed
     def get_records(self, table="leads", columns=[], parameters={}):
