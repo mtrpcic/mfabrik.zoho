@@ -211,6 +211,7 @@ class CRM(Connection):
                 records.append(record_detail)
         return records
 
+    # Fixed
     def get_potential_for_contact(self, contact_id):
         post_params = {
             "id": contact_id,

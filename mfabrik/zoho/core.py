@@ -85,7 +85,7 @@ class Connection(object):
         
     def open(self):
         """ Open a new Zoho API session """
-        self.ticket = self._create_ticket()
+        #self.ticket = self._create_ticket()
     
     def _create_ticket(self):
         """ 
@@ -150,8 +150,8 @@ class Connection(object):
     def ensure_opened(self):
         """ Make sure that the Zoho Connection is correctly opened """
         
-        if self.ticket is None:
-            raise ZohoException("Need to initialize Zoho ticket first")
+        #if self.ticket is None:
+        #    raise ZohoException("Need to initialize Zoho ticket first")
         
     def do_xml_call(self, url, parameters, root):
         """  Do Zoho API call with outgoing XML payload.
@@ -178,7 +178,7 @@ class Connection(object):
         """
         # Do not mutate orginal dict
         parameters = parameters.copy()
-        parameters["ticket"] = self.ticket
+        #parameters["ticket"] = self.ticket
         parameters["authtoken"] = self.authtoken
         parameters["scope"] = self.scope
         
