@@ -228,12 +228,9 @@ class CRM(Connection):
 
         url = "https://crm.zoho.com/crm/private/xml/Potentials/insertRecords"
         response = self.do_xml_call(url, post_params, root)
-        print "RESPONSE RESPONSE\n\n"
-        print response
-        print "\n\nRESPONSE RESPONSE"
         #response = self.get_inserted_records(self.do_xml_call(url, post_params, root))
         
-        return response   
+        return response
 
     # Fixed
     def get_potentials_for_contact(self, contact_id):
@@ -247,9 +244,10 @@ class CRM(Connection):
         response = self.do_call(url, post_params)
 
         data = decode_json(response)
-        print data
         # Sanify output data to more Python-like format
         output = []
+        if type(data["response"]["result"]["Potentials"]["row"]) is dict:
+            data["response"]["result"]["Potentials"]["row"] = [data["response"]["result"]["Potentials"]["row"]]
         for row in data["response"]["result"]["Potentials"]["row"]:
             item = {}
             print row
