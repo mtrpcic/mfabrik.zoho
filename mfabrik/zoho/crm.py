@@ -212,7 +212,7 @@ class CRM(Connection):
         return records
 
     # Fixed
-    def get_potential_for_contact(self, contact_id):
+    def get_potentials_for_contact(self, contact_id):
         post_params = {
             "id": contact_id,
             "newFormat": 1,
@@ -224,10 +224,15 @@ class CRM(Connection):
 
         data = decode_json(response)
         
-        output = {}
-        for record in data["response"]["result"]["Potentials"]["row"]["FL"]:
-            output[record["val"]] = record["content"]
-        
+        # Sanify output data to more Python-like format
+        output = []
+        for row in data["response"]["result"]["Potentials"]["row"]:
+            item = {}
+            for cell in row["FL"]:
+                item[cell["val"]] = cell["content"]
+            
+            output.append(item)
+            
         return output
 
     # Fixed
