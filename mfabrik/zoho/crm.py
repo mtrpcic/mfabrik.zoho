@@ -212,6 +212,26 @@ class CRM(Connection):
         return records
 
     # Fixed
+    def create_potential(self, potential):
+        root = Element("Potentials")
+        row = Element("row", no="1")
+        root.append(row)
+
+        for key, value in potential.items():
+            fl = Element("fl", val=key)
+            fl.text = value
+            row.append(fl)
+
+        post_params = {
+            "newFormat": 1
+        }
+
+        url = "https://crm.zoho.com/crm/private/xml/Potentials/insertRecords"
+        response = self.get_inserted_records(self.do_xml_call(url, post_params, root))
+        
+        return response[0]["Id"]     
+
+    # Fixed
     def get_potentials_for_contact(self, contact_id):
         post_params = {
             "id": contact_id,
@@ -223,7 +243,7 @@ class CRM(Connection):
         response = self.do_call(url, post_params)
 
         data = decode_json(response)
-        
+
         # Sanify output data to more Python-like format
         output = []
         for row in data["response"]["result"]["Potentials"]["row"]:
