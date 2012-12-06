@@ -229,7 +229,7 @@ class CRM(Connection):
         url = "https://crm.zoho.com/crm/private/xml/Potentials/insertRecords"
         response = self.get_inserted_records(self.do_xml_call(url, post_params, root))
         
-        return response[0]["Id"]     
+        return response   
 
     # Fixed
     def get_potentials_for_contact(self, contact_id):
