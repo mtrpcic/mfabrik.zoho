@@ -243,11 +243,12 @@ class CRM(Connection):
         response = self.do_call(url, post_params)
 
         data = decode_json(response)
-
+        print data
         # Sanify output data to more Python-like format
         output = []
         for row in data["response"]["result"]["Potentials"]["row"]:
             item = {}
+            print row
             for cell in row["FL"]:
                 item[cell["val"]] = cell["content"]
             
