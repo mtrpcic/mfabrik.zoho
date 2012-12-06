@@ -227,7 +227,11 @@ class CRM(Connection):
         }
 
         url = "https://crm.zoho.com/crm/private/xml/Potentials/insertRecords"
-        response = self.get_inserted_records(self.do_xml_call(url, post_params, root))
+        response = self.do_xml_call(url, post_params, root)
+        print "RESPONSE RESPONSE\n\n"
+        print response
+        print "\n\nRESPONSE RESPONSE"
+        #response = self.get_inserted_records(self.do_xml_call(url, post_params, root))
         
         return response   
 
